@@ -1,0 +1,46 @@
+#######################################
+# Syntax Coloring Map For CarEsp32
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+CarEsp32	KEYWORD1
+#######################################
+# Functions (KEYWORD2)
+#######################################
+acionarMotor    KEYWORD2
+acionarMotorA 	KEYWORD2
+acionarMotorB 	KEYWORD2
+pararMotorA 	KEYWORD2
+pararMotorB 	KEYWORD2
+moverFrente 	KEYWORD2
+moverAtras 		KEYWORD2
+moverDireita 	KEYWORD2
+moverEsquerda 	KEYWORD2
+ajustarVelocidade 	KEYWORD2
+pararMotor 	KEYWORD2
+setaMotorVelocidade 	KEYWORD2
+calibrarMotorA 	KEYWORD2
+calibrarMotorB 	KEYWORD2
+getSensorLinha 	KEYWORD2
+getSensoresLinha 	KEYWORD2
+#######################################
+# Constants And Literals (LITERAL1)
+#######################################
+REAR	LITERAL1
+FRONT	LITERAL1
+HIGH_QUALITY	LITERAL1
+LOW_QUALITY	LITERAL1
+AUTO	LITERAL1
+OFF	LITERAL1
+ON	LITERAL1
+SL1	LITERAL1
+SL2	LITERAL1
+SL3	LITERAL1
+SL4	LITERAL1
+SL5	LITERAL1
+SW1	LITERAL1
+SW2	LITERAL1
+SW3	LITERAL1
+SW4	LITERAL1    
