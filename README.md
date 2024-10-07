@@ -2,7 +2,7 @@
 <p align="center">
 
 </p>
-Required : ArduinoJson <a href="https://arduinojson.org/">.
+Required : 
 
 ## Features
 Carro controlado utilizando a placa CARESP32
