@@ -23,8 +23,9 @@ pararMotor 	KEYWORD2
 setaMotorVelocidade 	KEYWORD2
 calibrarMotorA 	KEYWORD2
 calibrarMotorB 	KEYWORD2
-getSensorLinha 	KEYWORD2
-getSensoresLinha 	KEYWORD2
+getSensorLinha	KEYWORD2
+getSensoresLinha	KEYWORD2
+setLinhaCorPreta	KEYWORD2
 #######################################
 # Constants And Literals (LITERAL1)
 #######################################

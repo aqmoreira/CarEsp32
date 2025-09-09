@@ -27,6 +27,7 @@ float calibragemMotorB = 1; //Fator de ajuste para calibrar motores para ter apr
 
 CarEsp32 carEsp32;  //Variável do Tipo CarEsp32 que é placa que controla o carro
 
+
 //A função setup é executado apenas uma vez ao ligar ou após reset
 void setup() {
   // Serial port for debugging purposes

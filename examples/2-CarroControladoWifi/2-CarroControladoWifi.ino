@@ -23,11 +23,11 @@ const char* ssid = "NomedaRedeWifi";
 const char* password = "#senhaRedewifi";
 
 //Rede AP do CARRO caso não consiga entrar no WIFI
-const char* ssidCar     = "CARESP32-06";
+const char* ssidCar     = "8A-G8";
 const char* passwordCar = "123456789";
 
 int velocidade = 150; //Velocidade máxima 255
-float calibragemMotorA = 1; //Fator de ajuste para calibrar motores para ter aproximadamente a mesma rotação
+float calibragemMotorA = 1; //Fa1ator de ajuste para calibrar motores para ter aproximadamente a mesma rotação
 float calibragemMotorB = 1; //Fator de ajuste para calibrar motores para ter aproximadamente a mesma rotação
 
 

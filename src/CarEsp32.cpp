@@ -17,12 +17,12 @@ CarEsp32::CarEsp32(){
   pinMode( SL4, INPUT);
   pinMode( SL5, INPUT);
   //chaves
-  pinMode( SW1, INPUT);
-  pinMode( SW2, INPUT);
-  pinMode( SW3, INPUT);
-  pinMode( SW4, INPUT);
+  pinMode( SW1, INPUT_PULLUP); // CORRIGIDO: INPUT_PULLUP para botoes
+  pinMode( SW2, INPUT_PULLUP); // CORRIGIDO: INPUT_PULLUP para botoes
+  pinMode( SW3, INPUT_PULLUP); // CORRIGIDO: INPUT_PULLUP para botoes
+  pinMode( SW4, INPUT_PULLUP); // CORRIGIDO: INPUT_PULLUP para botoes
   //Ultrasonico
-  pinMode(TRG, OUTPUT); 
+  pinMode(TRG, OUTPUT);
   pinMode(ECO, INPUT);
   //Motor
   pinMode(MOTOR_A_EN, OUTPUT);
@@ -40,8 +40,9 @@ CarEsp32::CarEsp32(){
 
  
 
-    // initialize default speed to SLOW
-    ajustarVelocidade(150);
+    // inicializa a velocidade padrão 150 (motores amarelo dc)
+    velocidade = 150; 
+   
 
 }
 
@@ -73,32 +74,58 @@ CarEsp32::CarEsp32(){
  byte CarEsp32::getSensoresLinha(){
 
     byte linha = 0;
-        
-    if( digitalRead(SL1) == LOW){
-      bitSet(linha,0);
-    }
-    if( digitalRead(SL2) == LOW){
-      bitSet(linha,1);
-    }
-    if( digitalRead(SL3) == LOW){
-      bitSet(linha,2);
-    }
-    if( digitalRead(SL4) == LOW){
-      bitSet(linha,3);
-    }
-    if( digitalRead(SL5) == LOW){
-      bitSet(linha,4);
+    if(linhaCorPreta){ // Linha Preta em Fundo Branco (LOW = Preto = na linha)
+    
+      if( digitalRead(SL1) == LOW){
+        bitSet(linha,0);
+      }
+      if( digitalRead(SL2) == LOW){
+        bitSet(linha,1);
+      }
+      if( digitalRead(SL3) == LOW){
+        bitSet(linha,2);
+      }
+      if( digitalRead(SL4) == LOW){
+        bitSet(linha,3);
+      }
+      if( digitalRead(SL5) == LOW){
+        bitSet(linha,4);
+      }
+    }else{ // Linha Branca em Fundo Preto (HIGH = Branco = na linha)
+       if( digitalRead(SL1) == HIGH){
+        bitSet(linha,0);
+      }
+      if( digitalRead(SL2) == HIGH){
+        bitSet(linha,1);
+      }
+      if( digitalRead(SL3) == HIGH){
+        bitSet(linha,2);
+      }
+      if( digitalRead(SL4) == HIGH){
+        bitSet(linha,3);
+      }
+      if( digitalRead(SL5) == HIGH){
+        bitSet(linha,4);
+      }
     }
 
     return linha;
   }
   /** Retorna o status do sensor de linha */
   bool CarEsp32::getSensorLinha(int sensor){
-    if( digitalRead(sensor) == LOW){
-      return false;
-    }else{
-      return true;
-    }
+    
+    bool sensorStatus = false;
+       
+    if(linhaCorPreta){ // Linha Preta em Fundo Branco (LOW = Preto = na linha)
+      if( digitalRead(sensor) == LOW){
+        sensorStatus = true;
+      }
+    } else{ // Linha Branca em Fundo Preto (HIGH = Branco = na linha)
+      if( digitalRead(sensor) == HIGH){
+       sensorStatus = true;
+      }
+     }
+     return sensorStatus;
   }
 
 /**Aciona o motor A e motor B com determinado sentido e velocidade */
@@ -130,15 +157,13 @@ void CarEsp32::acionarMotorB(bool sentidoHorario, int velo){
 void CarEsp32::pararMotorA(){
     digitalWrite(MOTOR_A_IN1, LOW);
     digitalWrite(MOTOR_A_IN2, LOW);
-    
-   
+    ledcWrite(MOTOR_A_EN, 0); // CORRIGIDO: Zera o PWM
 }
 /** Para o Motor B */
 void CarEsp32::pararMotorB(){
     digitalWrite(MOTOR_B_IN1, LOW);
     digitalWrite(MOTOR_B_IN2, LOW);
-   
-   
+    ledcWrite(MOTOR_B_EN, 0); // CORRIGIDO: Zera o PWM
 }
 
 /** Para os dois motores */
@@ -147,27 +172,30 @@ void CarEsp32::pararMotor(){
     digitalWrite(MOTOR_A_IN2, LOW);
     digitalWrite(MOTOR_B_IN1, LOW);
     digitalWrite(MOTOR_B_IN2, LOW);
-    setaMotorVelocidade();
+    ledcWrite(MOTOR_A_EN, 0); // CORRIGIDO: Zera o PWM do motor A
+    ledcWrite(MOTOR_B_EN, 0); // CORRIGIDO: Zera o PWM do motor B
+    
 }
 
 /** move os motores para frente */
 void CarEsp32::moverFrente(){
-  digitalWrite(MOTOR_A_IN1, LOW);
+    digitalWrite(MOTOR_A_IN1, LOW);
     digitalWrite(MOTOR_A_IN2, HIGH);
     digitalWrite(MOTOR_B_IN1, LOW);
     digitalWrite(MOTOR_B_IN2, HIGH);
-
-   
-    setaMotorVelocidade();
+    ledcWrite(MOTOR_A_EN, velocidade*fatorAjusteMotorA);
+    ledcWrite(MOTOR_B_EN, velocidade*fatorAjusteMotorB);
 }
 
 /** Move os motores para trás */
 void CarEsp32::moverAtras(){
-     digitalWrite(MOTOR_A_IN1, HIGH);
+    digitalWrite(MOTOR_A_IN1, HIGH);
     digitalWrite(MOTOR_A_IN2, LOW);
     digitalWrite(MOTOR_B_IN1, HIGH);
     digitalWrite(MOTOR_B_IN2, LOW);
-    setaMotorVelocidade();
+    // CORRIGIDO: Adiciona o PWM aqui
+    ledcWrite(MOTOR_A_EN, velocidade*fatorAjusteMotorA);
+    ledcWrite(MOTOR_B_EN, velocidade*fatorAjusteMotorB);
 }
 
 /** Mover para Direita */
@@ -176,7 +204,9 @@ void CarEsp32::moverDireita(){
     digitalWrite(MOTOR_A_IN2, LOW);
     digitalWrite(MOTOR_B_IN1, LOW);
     digitalWrite(MOTOR_B_IN2, HIGH);
-    setaMotorVelocidade();
+    // CORRIGIDO: Adiciona o PWM aqui
+    ledcWrite(MOTOR_A_EN, velocidade*fatorAjusteMotorA);
+    ledcWrite(MOTOR_B_EN, velocidade*fatorAjusteMotorB);
 }
 /** Mover para Esquerda */
 void CarEsp32::moverEsquerda(){
@@ -184,12 +214,14 @@ void CarEsp32::moverEsquerda(){
     digitalWrite(MOTOR_A_IN2, HIGH);
     digitalWrite(MOTOR_B_IN1, HIGH);
     digitalWrite(MOTOR_B_IN2, LOW);
-    setaMotorVelocidade();
+    // CORRIGIDO: Adiciona o PWM aqui
+    ledcWrite(MOTOR_A_EN, velocidade*fatorAjusteMotorA);
+    ledcWrite(MOTOR_B_EN, velocidade*fatorAjusteMotorB);
 }
 /** Liga o carro com a velocidade ajustada anteriormente*/
  void CarEsp32::setaMotorVelocidade()
   {
-    // change the duty cycle of the speed control pin connected to the motor
+    // Esta funcao usa a variavel de velocidade INTERNA da classe CarEsp32
     Serial.print("Potência:");
     Serial.print(velocidade);
     Serial.print(" Motor A:");
@@ -197,8 +229,6 @@ void CarEsp32::moverEsquerda(){
     Serial.print(" Motor B:");
     Serial.println(velocidade*fatorAjusteMotorB);
     
-
-
     ledcWrite(MOTOR_A_EN, velocidade*fatorAjusteMotorA);
     ledcWrite(MOTOR_B_EN, velocidade*fatorAjusteMotorB);
     
@@ -225,4 +255,10 @@ void CarEsp32::calibrarMotorA(float fator){
 void CarEsp32::calibrarMotorB(float fator){
   fatorAjusteMotorB = fator;
 }
-    
+
+/** Seta o tipo de linha. True - Linha Preta , False - Linha Branca */
+void CarEsp32::setLinhaCorPreta(bool isCorPreta){
+   linhaCorPreta = isCorPreta;
+   Serial.print("Linha Preta:");
+   Serial.println(linhaCorPreta);
+}
