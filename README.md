@@ -1,6 +1,6 @@
 # CarEsp32
 
-É uma placa que server de suporte para ESP32 DEV Kit V1 30 pinos, para conectar sensores como sensor de linha, sensor ultrasônico, sensor i2c, tem já os pinos para controle de uma ponte H (L298N), pinos específico para sensor de linha para carrinho seguidor, 4 chaves táctil para programação.
+É uma placa que server de suporte para ESP32 DEV Kit V1 30 pinos, para conectar sensores como sensor de linha, sensor ultrasônico, sensor i2c, tem já os pinos para controle de uma ponte H (L298N), pinos específico para sensor de linha para carrinho seguidor, 4 chaves táctil para programação. Alguns linos para uso genérico.
 <p align="center">
 
 </p>
